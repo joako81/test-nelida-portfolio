@@ -17,26 +17,18 @@ module.exports = webpackMerge(webpackCommon, {
   output: {
   
     path: path.resolve(__dirname, '../static/dist'),
-
     filename: '[name].js',
-
     sourceMapFilename: '[name].map',
-
     chunkFilename: '[id]-chunk.js',
-
     publicPath: '/'
-
   },
 
   module: {
-
     rules: [
       {
-        test: /\.s?css$/,
+        test: /\.scss$/,
         use: [
-          {
-            loader: 'style-loader'
-          },
+          'style-loader',
           {
             loader: 'css-loader',
             options: {
@@ -46,15 +38,29 @@ module.exports = webpackMerge(webpackCommon, {
           {
             loader: 'sass-loader',
             options: {
-              outputStyle: 'expanded',
-              sourceMap: true,
-              sourceMapContents: true
+              api: 'modern-compiler',
+              sassOptions: {
+                outputStyle: 'expanded',
+                sourceMap: true,
+                sourceMapContents: true
+              }
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: [
+                  require('autoprefixer')({
+                    overrideBrowserslist: ['last 2 versions']
+                  })
+                ]
+              }
             }
           }
         ]
       }
     ]
-
   },
 
   plugins: [
